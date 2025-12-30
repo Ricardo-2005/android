@@ -11,7 +11,6 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
@@ -23,12 +22,6 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public final class DeepSeekCalorieService {
-    public interface CalorieCallback {
-        void onSuccess(float calories, String rawContent);
-
-        void onError(String message);
-    }
-
     public interface AiResultCallback {
         void onSuccess(AiDietResult result, String rawContent);
 
@@ -37,24 +30,24 @@ public final class DeepSeekCalorieService {
 
     private static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
     private static final String SYSTEM_PROMPT =
-            "你是一个用于【健康饮食热量监控系统】的智能营养分析模型。\n"
-                    + "系统中不存在任何本地食物库，所有热量均由你基于常见饮食知识进行估算。\n"
-                    + "用户会用自然语言描述饮食内容，你需要自动识别食物并计算摄入热量。\n"
-                    + "只允许输出 JSON，不要输出任何解释性文字。\n"
+            "You are a nutrition analysis assistant.\n"
+                    + "The user will describe food intake in natural language.\n"
+                    + "You must identify each food item and estimate its weight and calories.\n"
+                    + "Return ONLY valid JSON. Do not include explanations or extra text.\n"
                     + "\n"
-                    + "输出格式必须严格如下：\n"
-                    + "\n"
+                    + "The JSON format must be exactly as follows:\n"
                     + "{\n"
                     + "  \"items\": [\n"
                     + "    {\n"
-                    + "      \"food\": \"食物名称\",\n"
-                    + "      \"estimated_weight_g\": 数值,\n"
-                    + "      \"calories_kcal\": 数值\n"
+                    + "      \"food\": \"food name\",\n"
+                    + "      \"estimated_weight_g\": number,\n"
+                    + "      \"calories_kcal\": number\n"
                     + "    }\n"
                     + "  ],\n"
-                    + "  \"total_calories_kcal\": 数值,\n"
-                    + "  \"note\": \"热量为 AI 智能估算，仅供参考\"\n"
+                    + "  \"total_calories_kcal\": number,\n"
+                    + "  \"note\": \"Calories are AI estimates for reference only\"\n"
                     + "}";
+
     private static final OkHttpClient CLIENT = new OkHttpClient.Builder()
             .connectTimeout(10, TimeUnit.SECONDS)
             .readTimeout(15, TimeUnit.SECONDS)
@@ -66,26 +59,6 @@ public final class DeepSeekCalorieService {
 
     public static boolean isConfigured() {
         return !isBlank(BuildConfig.DEEPSEEK_API_KEY) && !isBlank(BuildConfig.DEEPSEEK_BASE_URL);
-    }
-
-    public static void requestCalories(
-            String foodName,
-            String unit,
-            float quantity,
-            CalorieCallback callback
-    ) {
-        String prompt = buildUserText(foodName, unit, quantity);
-        requestAnalysis(prompt, new AiResultCallback() {
-            @Override
-            public void onSuccess(AiDietResult result, String rawContent) {
-                callback.onSuccess(result.totalCalories, rawContent);
-            }
-
-            @Override
-            public void onError(String message) {
-                callback.onError(message);
-            }
-        });
     }
 
     public static void requestAnalysis(String userInput, AiResultCallback callback) {
@@ -155,14 +128,6 @@ public final class DeepSeekCalorieService {
                 }
             }
         });
-    }
-
-    private static String buildUserText(String foodName, String unit, float quantity) {
-        String countText = formatNumber(quantity);
-        if (isBlank(unit)) {
-            return "用户输入：吃了" + countText + safeText(foodName);
-        }
-        return "用户输入：吃了" + countText + unit + safeText(foodName);
     }
 
     private static String parseContent(String body) {
@@ -255,17 +220,6 @@ public final class DeepSeekCalorieService {
         } catch (NumberFormatException ignored) {
             return 0f;
         }
-    }
-
-    private static String formatNumber(float value) {
-        if (value == (long) value) {
-            return String.format(Locale.US, "%d", (long) value);
-        }
-        return String.format(Locale.US, "%.2f", value);
-    }
-
-    private static String safeText(String value) {
-        return value == null ? "" : value.trim();
     }
 
     private static boolean isBlank(String value) {

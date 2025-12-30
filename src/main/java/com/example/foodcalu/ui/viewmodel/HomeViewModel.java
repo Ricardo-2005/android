@@ -5,10 +5,8 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Transformations;
 
 import com.example.foodcalu.data.entity.UserProfile;
-import com.example.foodcalu.data.model.DailyKcal;
 import com.example.foodcalu.repository.AppRepository;
 import com.example.foodcalu.repository.DietRepository;
 import com.example.foodcalu.util.DateUtils;
@@ -48,12 +46,4 @@ public class HomeViewModel extends AndroidViewModel {
         return repository.getDailyWorkoutDuration(today);
     }
 
-    public LiveData<List<DailyKcal>> getWeekKcal() {
-        long start = DateUtils.addDays(today, -6);
-        return repository.getDailyKcalBetween(start, today);
-    }
-
-    public LiveData<String> getTodayLabel() {
-        return Transformations.map(getUserProfile(), profile -> DateUtils.formatDate(today));
-    }
 }

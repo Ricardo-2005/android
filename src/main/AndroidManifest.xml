@@ -29,14 +29,6 @@
             android:exported="false" />
 
         <activity
-            android:name=".ui.AddMealActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".ui.FoodDetailActivity"
-            android:exported="false" />
-
-        <activity
             android:name=".ui.WorkoutCategoryActivity"
             android:exported="false" />
 
@@ -44,9 +36,6 @@
             android:name=".ui.WorkoutDetailActivity"
             android:exported="false" />
 
-        <activity
-            android:name=".ui.DietMainActivity"
-            android:exported="false" />
     </application>
 
 </manifest>

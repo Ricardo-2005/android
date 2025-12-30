@@ -1,36 +1,21 @@
 <resources>
-    <string name="app_name">健康食物监控</string>
+    <string name="app_name">Health Food Monitor</string>
 
     <string-array name="gender_options">
-        <item>男</item>
-        <item>女</item>
+        <item>Male</item>
+        <item>Female</item>
     </string-array>
 
     <string-array name="activity_options">
-        <item>久坐</item>
-        <item>轻度</item>
-        <item>中度</item>
-        <item>重度</item>
+        <item>Sedentary</item>
+        <item>Light</item>
+        <item>Moderate</item>
+        <item>High</item>
     </string-array>
 
     <string-array name="goal_options">
-        <item>减脂</item>
-        <item>维持</item>
-        <item>增肌</item>
-    </string-array>
-
-    <string-array name="meal_types">
-        <item>早餐</item>
-        <item>午餐</item>
-        <item>晚餐</item>
-        <item>加餐</item>
-    </string-array>
-
-    <string-array name="unit_options">
-        <item>克</item>
-        <item>一碗</item>
-        <item>一份</item>
-        <item>一个</item>
-        <item>一杯</item>
+        <item>Lose Fat</item>
+        <item>Maintain</item>
+        <item>Build Muscle</item>
     </string-array>
 </resources>

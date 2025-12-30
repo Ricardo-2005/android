@@ -10,7 +10,7 @@ def localPropsFile = rootProject.file("local.properties")
 if (localPropsFile.exists()) {
     localProps.load(new FileInputStream(localPropsFile))
 }
-def deepseekApiKey = localProps.getProperty("DEEPSEEK_API_KEY", "sk-cac6d0a9c6f146e3bce14b9c80006e57")
+def deepseekApiKey = localProps.getProperty("DEEPSEEK_API_KEY", "你的deepseek的api")
 def deepseekBaseUrl = localProps.getProperty("DEEPSEEK_BASE_URL", "https://api.deepseek.com")
 
 android {
